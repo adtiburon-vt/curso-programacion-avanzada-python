@@ -1,0 +1,167 @@
+# 🧭 Sesión 1 · Punto 3 — Decoradores y funciones anidadas
+
+## 🎯 Objetivos específicos
+
+* Comprender qué son las funciones anidadas y cómo funcionan los *closures*.
+* Entender el patrón de los decoradores en Python.
+* Crear decoradores personalizados y conocer los decoradores integrados más comunes.
+
+---
+
+## 📚 Resumen teórico-práctico
+
+### 🔹 Funciones anidadas
+
+Una función puede definirse dentro de otra, y puede acceder a variables del ámbito exterior.
+
+```python
+def exterior(mensaje):
+    def interior():
+        print(f"Hola {mensaje}")
+    return interior
+
+saludo = exterior("Python")
+saludo()  # Hola Python
+```
+
+👉 `interior` “recuerda” el valor de `mensaje` aunque `exterior` ya haya terminado → esto se llama **closure**.
+
+---
+
+### 🔹 Closures prácticos
+
+Sirven para generar funciones personalizadas dinámicamente:
+
+```python
+def potencia(exp):
+    def elevar(base):
+        return base ** exp
+    return elevar
+
+cuadrado = potencia(2)
+print(cuadrado(5))  # 25
+```
+
+---
+
+### 🔹 Decoradores básicos
+
+Un **decorador** es una función que recibe otra función y devuelve una nueva, normalmente añadiendo comportamiento extra.
+
+```python
+def mi_decorador(func):
+    def wrapper(*args, **kwargs):
+        print("Antes de ejecutar")
+        resultado = func(*args, **kwargs)
+        print("Después de ejecutar")
+        return resultado
+    return wrapper
+
+@mi_decorador
+def saludar(nombre):
+    print(f"Hola {nombre}")
+
+saludar("Ana")
+```
+
+---
+
+### 🔹 Decoradores útiles en la práctica
+
+* **Logging**
+
+```python
+def log(func):
+    def wrapper(*args, **kwargs):
+        print(f"[LOG] {func.__name__} con {args} {kwargs}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log
+def sumar(a, b):
+    return a + b
+```
+
+* **Medición de tiempo**
+
+```python
+import time
+
+def cronometro(func):
+    def wrapper(*args, **kwargs):
+        inicio = time.time()
+        resultado = func(*args, **kwargs)
+        print(f"Tardó {time.time()-inicio:.4f}s")
+        return resultado
+    return wrapper
+```
+
+* **Control de acceso**
+
+```python
+def requiere_admin(func):
+    def wrapper(*args, rol=None, **kwargs):
+        if rol != "admin":
+            raise PermissionError("Acceso denegado")
+        return func(*args, **kwargs)
+    return wrapper
+```
+
+---
+
+### 🔹 Decoradores con parámetros
+
+Un decorador puede recibir sus propios argumentos:
+
+```python
+def repetir(n):
+    def decorador(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(n):
+                func(*args, **kwargs)
+        return wrapper
+    return decorador
+
+@repetir(3)
+def hola():
+    print("Hola!")
+
+hola()  
+# Se imprime 3 veces
+```
+
+---
+
+### 🔹 Decoradores en la librería estándar
+
+* `@staticmethod` → método que no recibe `self`.
+* `@classmethod` → recibe `cls` en vez de `self`.
+* `@property` → convierte un método en un atributo calculado.
+
+```python
+class Circulo:
+    def __init__(self, radio):
+        self.radio = radio
+
+    @property
+    def area(self):
+        from math import pi
+        return pi * self.radio**2
+```
+
+---
+
+## 🧩 Mini-ejercicios rápidos
+
+1. Crea un decorador `@contador` que muestre cuántas veces se ha llamado una función.
+2. Crea un decorador `@cronometro` que mida el tiempo de ejecución de una función.
+3. Define una función anidada `multiplicador(factor)` que devuelva otra función que multiplique por ese factor.
+
+---
+
+## ✅ Checklist de dominio
+
+* [ ] ¿Entiendo la diferencia entre función anidada y closure?
+* [ ] ¿Uso `@wraps` (de `functools`) si quiero preservar nombre y docstring de la función decorada?
+* [ ] ¿Sé aplicar decoradores integrados (`@staticmethod`, `@classmethod`, `@property`)?
+* [ ] ¿Sé encadenar decoradores en el orden correcto?

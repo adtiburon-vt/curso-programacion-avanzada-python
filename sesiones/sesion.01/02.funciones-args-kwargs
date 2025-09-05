@@ -1,0 +1,119 @@
+# 🧭 Sesión 1 · Punto 2 — Funciones con `*args` y `**kwargs`
+
+## 🎯 Objetivos específicos
+
+* Comprender cómo funcionan los argumentos variables en Python.
+* Usar `*args` para recibir un número indefinido de parámetros posicionales.
+* Usar `**kwargs` para recibir parámetros con nombre flexibles.
+* Combinar `*args` y `**kwargs` para crear funciones reutilizables.
+
+---
+
+## 📚 Resumen teórico-práctico
+
+### 🔹 `*args`: argumentos posicionales variables
+
+Permite pasar cualquier número de valores posicionales.
+Internamente se reciben como una **tupla**.
+
+```python
+def suma(*args):
+    return sum(args)
+
+print(suma(1, 2, 3))       # 6
+print(suma(10, 20, 30, 5)) # 65
+```
+
+---
+
+### 🔹 `**kwargs`: argumentos con nombre variables
+
+Permite pasar pares `clave=valor` arbitrarios.
+Internamente se reciben como un **diccionario**.
+
+```python
+def mostrar_info(**kwargs):
+    for clave, valor in kwargs.items():
+        print(f"{clave}: {valor}")
+
+mostrar_info(nombre="Ana", edad=30, ciudad="Madrid")
+# nombre: Ana
+# edad: 30
+# ciudad: Madrid
+```
+
+---
+
+### 🔹 Combinando `*args` y `**kwargs`
+
+Una función puede recibir ambos, primero `*args`, luego `**kwargs`.
+
+```python
+def procesar(*args, **kwargs):
+    print("args:", args)
+    print("kwargs:", kwargs)
+
+procesar(1, 2, 3, usuario="david", rol="admin")
+# args: (1, 2, 3)
+# kwargs: {'usuario': 'david', 'rol': 'admin'}
+```
+
+---
+
+### 🔹 Orden de los parámetros en una función
+
+El orden correcto es:
+
+1. Argumentos posicionales normales
+2. `*args`
+3. Argumentos con nombre por defecto
+4. `**kwargs`
+
+```python
+def ejemplo(a, b, *args, c=10, **kwargs):
+    print(a, b, args, c, kwargs)
+```
+
+---
+
+### 🔹 Usos prácticos
+
+1. **Funciones flexibles** (ej. logger con mensajes arbitrarios).
+
+   ```python
+   def log(mensaje, *detalles):
+       print(mensaje, *detalles)
+
+   log("Error:", 404, "Not Found", "/index.html")
+   ```
+2. **Forwarding** de argumentos (reenvío a otras funciones).
+
+   ```python
+   def wrapper(func, *args, **kwargs):
+       return func(*args, **kwargs)
+   ```
+3. **Configuraciones dinámicas** con diccionarios.
+
+   ```python
+   def conectar(**config):
+       print("Conectando con:", config)
+
+   conectar(host="localhost", port=5432, ssl=True)
+   ```
+
+---
+
+## 🧩 Mini-ejercicios rápidos
+
+1. Crea una función `media(*nums)` que devuelva la media de cualquier cantidad de números.
+2. Crea `crear_usuario(**datos)` que imprima todos los pares clave/valor recibidos.
+3. Escribe `ejecutar(func, *args, **kwargs)` que reciba una función y sus parámetros, y devuelva el resultado de ejecutarla.
+
+---
+
+## ✅ Checklist de dominio
+
+* [ ] ¿Entiendo que `*args` es una **tupla** y `**kwargs` es un **diccionario**?
+* [ ] ¿Sé combinar ambos en la misma función?
+* [ ] ¿Conozco el orden correcto de definición de parámetros?
+* [ ] ¿Puedo aplicar `*args`/`**kwargs` para reenviar argumentos a otras funciones?

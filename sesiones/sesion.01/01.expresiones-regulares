@@ -1,0 +1,135 @@
+# Sesión 1 · Punto 1 — Expresiones regulares con `re`
+
+## Objetivos específicos
+
+* Dominar los metacaracteres y clases más usadas.
+* Saber elegir entre `match`, `search`, `findall`, `finditer` y `sub`.
+* Diseñar patrones robustos para validación y extracción de datos reales.
+
+## Resumen teórico práctico
+
+* **Metacaracteres**: `.^$*+?{}[]()|\`
+* **Clases**: `\d` (dígito), `\w` (alfa-numérico y `_`), `\s` (espacio en blanco), `\b` (borde de palabra).
+* **Anclajes**: `^` inicio, `$` fin.
+* **Cuantificadores**: `*` 0+, `+` 1+, `?` 0/1, `{m}`, `{m,n}`.
+* **Grupos**: `()` captura, `(?:...)` no captura, `(?P<nombre>...)` con nombre.
+* **Alternancia**: `a|b`.
+* **Flags útiles**: `re.I` (ignorecase), `re.M` (multilínea), `re.S` (dotall), `re.X` (verbose).
+
+## API esencial de `re`
+
+* `re.compile(patron, flags=0)` → objeto patrón reutilizable.
+* `pat.match(texto)` vs `pat.search(texto)`
+
+  * `match` exige comienzo de cadena; `search` busca en cualquier parte.
+* `pat.findall(texto)` devuelve listas de coincidencias (o tuplas si hay grupos).
+* `pat.finditer(texto)` iterador de `Match` (más eficiente para procesar).
+* `re.sub(pat, repl, texto)` sustitución (admite función `repl`).
+* `m.group(0)` coincidencia completa; `m.group(1)`… grupos.
+
+## Ejemplos canónicos
+
+### 1) Validación de email (sencilla y práctica)
+
+> Nota: la validación de emails “perfecta” es compleja; este patrón es pragmático.
+
+```python
+import re
+
+EMAIL = re.compile(r'^[\w\.-]+@[\w\.-]+\.\w{2,}$')
+
+def es_email(s: str) -> bool:
+    return EMAIL.match(s) is not None
+```
+
+### 2) Extracción de fechas (dd/mm/aaaa) con grupos nombrados
+
+```python
+import re
+
+FECHA = re.compile(r'(?P<dia>\d{2})/(?P<mes>\d{2})/(?P<anio>\d{4})')
+
+def extraer_fechas(texto: str):
+    return [
+        (m.group('dia'), m.group('mes'), m.group('anio'))
+        for m in FECHA.finditer(texto)
+    ]
+```
+
+### 3) Normalización de teléfonos (formato español 9 dígitos) con `sub`
+
+```python
+import re
+
+TEL = re.compile(r'\b(\d[\s-]?){9}\b')
+
+def limpiar_telefonos(texto: str):
+    # Quita espacios y guiones dentro del número
+    return TEL.sub(lambda m: re.sub(r'[\s-]', '', m.group(0)), texto)
+```
+
+### 4) Capturas no deseadas → grupo no capturante
+
+```python
+import re
+
+# Dominio .com | .net | .org sin crear grupo numerado
+DOM = re.compile(r'^[\w.-]+@[\w.-]+(?:\.com|\.net|\.org)$')
+```
+
+### 5) `re.VERBOSE` para patrones legibles
+
+```python
+import re
+
+PASSWORD = re.compile(r"""
+    ^(?=.*[A-Z])      # al menos una mayúscula
+     (?=.*\d)         # al menos un dígito
+     (?=.{8,})        # mínimo 8 caracteres
+    .*$               # resto
+""", re.X)
+
+def valida_password(s: str) -> bool:
+    return PASSWORD.match(s) is not None
+```
+
+## Anti-patrones y buenas prácticas
+
+* ❌ **Greedy inesperado**: `.*` captura de más; usa `.*?` si procede.
+* ✅ **Compila** patrones reutilizados para rendimiento.
+* ✅ **Ancla** (`^`/`$`) cuando valides cadenas completas.
+* ✅ **Escapa** entradas dinámicas con `re.escape()` si interpolas.
+* ✅ **Usa grupos nombrados** para claridad en extracción.
+* ✅ **Divide y vencerás**: valida estructura general y luego reglas específicas en código.
+
+## Mini-ejercicios (rápidos, con solución)
+
+1. **Matrículas formato simple** (ej.: `1234-ABC`):
+   Patrón esperado: `^\d{4}-[A-Z]{3}$`
+
+2. **Extraer importes** con símbolo de € opcional:
+
+   ```python
+   IMP = re.compile(r'(?:€\s*)?\d+(?:[.,]\d{1,2})?')
+   ```
+
+3. **Encontrar hashtags** en un texto:
+
+   ```python
+   HASHTAG = re.compile(r'(?<!\w)#\w+')
+   ```
+
+4. **Partir CSV simple** sin comillas (solo comas):
+
+   ```python
+   CAMPOS = re.compile(r'[^,]+')
+   ```
+
+## Checklist de dominio (para revisión rápida)
+
+* [ ] ¿El patrón está anclado si es validación total?
+* [ ] ¿He considerado mayúsculas/minúsculas (`re.I`)?
+* [ ] ¿Evito `.*` cuando puede comer de más?
+* [ ] ¿Uso grupos nombrados cuando voy a leer campos?
+* [ ] ¿He añadido tests con entradas válidas e inválidas?
+
