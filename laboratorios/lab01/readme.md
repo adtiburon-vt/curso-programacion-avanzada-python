@@ -1,17 +1,3 @@
-> **Lab:** validación de formularios + funciones reutilizables
-
-Eso significa que el laboratorio **no se divide en 3 laboratorios separados**, sino que debe integrar:
-
-1. **Expresiones regulares** → validar campos de formulario.
-2. **Funciones con `*args` y `**kwargs`** → hacer funciones reutilizables y flexibles.
-3. **Decoradores/funciones anidadas** → añadir comportamiento extra a las funciones del formulario.
-
----
-
-Te reescribo el **README del Laboratorio 1** ajustado estrictamente al temario:
-
----
-
 # 🧭 Laboratorio 1 — Validación de formularios + funciones reutilizables
 
 **Duración estimada:** 2 horas
