@@ -282,5 +282,5 @@ salida = procesar_formulario_hooks(
 
 ## Notas rápidas
 
-* Puedes **combinar** estos retos si lo deseas (e.g., alias + severidades + hooks) fusionando las variantes en un único `procesar_formulario`, pero te los dejo **aislados** como pediste.
+* Puedes **combinar** estos retos si lo deseas (e.g., alias + severidades + hooks) fusionando las variantes en un único `procesar_formulario`
 * Mantén `REGLAS_BASE`, `aplicar_normalizadores` y `validar_valor` (o sus variantes) en tu módulo para reusar entre versiones.
