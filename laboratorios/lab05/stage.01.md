@@ -201,8 +201,18 @@ Desde la carpeta raíz:
 
 ---
 
-## 🔥 Reto (opcional)
+## 🔹 Reto 1 — Normalización centralizada de email
 
-1. **`utils.hash_password` real**: crea funciones con `hashlib.sha256` y úsalo en `Usuario`.
-2. **`__eq__` y `__hash__` en `Usuario`**: igualdad por email normalizado; permite usar usuarios en `set`.
-3. **Dividir `modelos.py`** en submódulos (`dominio/usuario.py`, `dominio/roles.py`) y re-exportar desde `app/__init__.py`.
+Extrae la lógica de limpieza y normalización de email (`strip().lower()`) a una función `normalizar_email()` en `utils.py`, y úsala en los módulos donde ya se aplica manualmente.
+
+---
+
+## 🔹 Reto 2 — Alias semántico: `usuarios.py`
+
+Crea un nuevo módulo `usuarios.py` en el paquete `app/`, que actúe como **alias/fachada** para importar las clases `Usuario`, `Admin`, `Invitado`, `Moderador`, y facilitar los imports en el futuro.
+
+---
+
+## 🔹 Reto 3 — Script de prueba con uso real del paquete
+
+Crea un script `main.py` en la raíz del proyecto que use las clases y el repositorio importando desde el paquete `app`, y muestre por consola al menos un usuario creado correctamente.
