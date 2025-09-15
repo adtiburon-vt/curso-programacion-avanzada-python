@@ -136,15 +136,8 @@ lab3_sistema_usuarios/
 
 ---
 
-## 🔥 Retos (opcionales)
 
-* **Factory por rol**: `Usuario.desde_dict` detecta `rol` y devuelve `Admin` o `Invitado` automáticamente.
-* **Password real**: usa `hashlib.sha256` para calcular y verificar hash (sin almacenar el texto plano).
-* **Persistencia ligera**: exporta/importa usuarios en JSON (solo datos públicos y el hash).
-
----
-
-## 🧱 Scaffold de partida (mínimo)
+## 🧱 Scaffold de partida (una vez superadas las 3 fases ( con o sin retos superados ) necesario para lab 4)
 
 **app/modelos.py**
 
