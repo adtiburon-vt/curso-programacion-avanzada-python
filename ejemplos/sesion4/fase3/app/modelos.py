@@ -1,39 +1,3 @@
-# main.py
-from app.modelos import Usuario
-
-if __name__ == "__main__":
-    # Caso feliz
-    u = Usuario("Ana", "ANA@Test.com", rol="admin")
-    u.set_password("secreta!")
-    print(u.presentarse(), u.rol, u.check_password("secreta!"))
-
-    # Email inválido
-    try:
-        u.email = "sin-arroba"
-    except ValueError as e:
-        print("Email inválido OK:", e)
-
-    # Rol inválido
-    try:
-        u.rol = "superuser"
-    except ValueError as e:
-        print("Rol inválido OK:", e)
-
-    # desde_dict
-    datos = {"nombre": "Luis", "email": "luis@test.com", "rol": "invitado", "activo": False}
-    u2 = Usuario.desde_dict(datos)
-    print(repr(u2))
-
-    # Password mínima
-    try:
-        u2.set_password("123")
-    except ValueError as e:
-        print("Password corta OK:", e)
-
-
-
-    
-
 
 # app/modelos.py
 from __future__ import annotations
@@ -113,11 +77,11 @@ class Usuario(BaseUsuario):
         return self.__password_hash == f"hash::{p}"
 
     @classmethod
-    def desde_dict(cls, datos: dict) -> "Usuario":  
+    def desde_dict(cls, datos: dict) -> "Usuario":
         return cls(
             nombre=datos.get("nombre", ""),
             email=datos.get("email", ""),
-            rol=datos.get("rol", "usuario"), 
+            rol=datos.get("rol", "usuario"),
             activo=bool(datos.get("activo", True)),
         )
 
@@ -125,7 +89,7 @@ class Usuario(BaseUsuario):
     def permisos(self) -> list[str]:
         return ["ver"]
 
-# --- Subclases por rol ---
+
 class Admin(Usuario):
     def __init__(self, nombre: str, email: str, activo: bool = True):
         super().__init__(nombre, email, rol="admin", activo=activo)
@@ -133,19 +97,56 @@ class Admin(Usuario):
     def permisos(self) -> list[str]:
         return ["ver", "crear", "editar", "borrar"]
 
-class Invitado(Usuario):
-    def __init__(self, nombre: str, email: str, activo: bool = True):
-        super().__init__(nombre, email, rol="invitado", activo=activo)
+    # ✅ NUEVO: extender sin duplicar
+    def presentarse(self) -> str:
+        base = super().presentarse()   # "Soy {nombre} ({email})"
+        return f"[ADMIN] {base}"
+
+
+class Moderador(Usuario):
+    def __init__(self, nombre: str, email: str, nivel: int = 1, activo: bool = True):
+        super().__init__(nombre, email, rol="moderador", activo=activo)
+        self.nivel = nivel
 
     def permisos(self) -> list[str]:
-        return ["ver"]
+        base = ["ver", "editar"]
+        if self.nivel >= 2:
+            base.append("borrar")
+        return base
 
+    # ✅ REESCRITO: aprovechar el __str__ del padre
     def __str__(self) -> str:
-        return f"[INVITADO] {super().__str__()}"
+        return f"[MODERADOR-N{self.nivel}] {super().__str__()}"
+
+
+from datetime import datetime
+from typing import Any
+
+class LoggerMixin:
+    """Mixin de logging simple. Supone que la clase hija tiene .email y .__class__.__name__."""
+    def log_evento(self, msg: str, **context: Any) -> None:
+        ts = datetime.now().isoformat(timespec="seconds")
+        who = getattr(self, "email", "desconocido")
+        extra = f" {context}" if context else ""
+        print(f"[{ts}] [{self.__class__.__name__}] <{who}> {msg}{extra}")
+
+    # Ejemplo de método que coopera con super() para cadenas MRO
+    def activar(self) -> None:
+        self.log_evento("Activando usuario…")
+        super().activar()  # delega al siguiente en el MRO
+        self.log_evento("Usuario activado")
+
+class AdminConLogger(LoggerMixin, Admin):
+    """Admin con capacidades de logging vía mixin."""
+    # hereda todo; si quieres, puedes extender presentarse/activar usando super()
+    def presentarse(self) -> str:
+        base = super().presentarse()
+        self.log_evento("presentarse() invocado")
+        return base
     
+class NotificadorMixin:
+    def enviar_email(self, asunto: str, cuerpo: str) -> None:
+        print(f"[EMAIL a {self.email}] {asunto}: {cuerpo}")
 
-
-
-Usuario.desde_dict()
-Admin.desde_dict()
-Invitado.desde_dict()
+class AdminFull(NotificadorMixin, LoggerMixin, Admin):
+    pass
