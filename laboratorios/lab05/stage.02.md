@@ -88,19 +88,35 @@ python -c "import main"
 
 # ✅  Retos
 
-### 🔹 Reto 1 — Añadir protección con `if __name__ == "__main__"`
+---
 
-Asegúrate de que el código solo se ejecuta si se lanza directamente con `python main.py`, y **no se ejecuta automáticamente si se importa como módulo**.
+### 🔹 Reto 1 — Proteger el script con `if __name__ == "__main__"`
+
+Asegúrate de que la función principal del programa (`main()`) solo se ejecuta si el archivo `main.py` se lanza directamente. Usa la condición especial:
+
+```python
+if __name__ == "__main__":
+    main()
+```
 
 ---
 
-### 🔹 Reto 2 — Controlar errores al agregar usuarios duplicados
+### 🔹 Reto 2 — Comprobar que `main.py` no se ejecuta al importar
 
-Modifica el código para que **no se rompa** si se intenta agregar un usuario con un email ya existente. En su lugar, debe mostrarse un mensaje claro por consola, sin interrumpir la ejecución.
+Haz una prueba: importa el módulo `main` desde otro archivo o desde consola para verificar que **no imprime nada** automáticamente. Añade un `print("Demo iniciada")` dentro de la función `main()` para comprobarlo visualmente.
+
+> Pista:
+> Ejecuta esto desde terminal:
+>
+> ```bash
+> python -c "import main"
+> ```
 
 ---
 
-### 🔹 Reto 3 — Mostrar resumen final de emails activos
+### 🔹 Reto 3 — Mostrar el valor de `__name__`
 
-Al final de la ejecución, imprime una línea que resuma **los emails de los usuarios actualmente activos** en el repositorio.
+Dentro de `main.py`, **imprime el valor de `__name__`** tanto **dentro de la función `main()`** como **fuera**, justo antes del `if __name__ == "__main__"`.
+
+Esto te ayudará a ver cómo cambia `__name__` dependiendo de si el script se ejecuta directamente o es importado como módulo.
 
