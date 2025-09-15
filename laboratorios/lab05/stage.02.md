@@ -85,13 +85,22 @@ python -c "import main"
   * Lista final tras eliminar al admin (solo el moderador).
 * Importar `main` **no** ejecuta la demo (no hay prints), confirmando que el bloque protegido por `__main__` funciona.
 
+
+# ✅  Retos
+
+### 🔹 Reto 1 — Añadir protección con `if __name__ == "__main__"`
+
+Asegúrate de que el código solo se ejecuta si se lanza directamente con `python main.py`, y **no se ejecuta automáticamente si se importa como módulo**.
+
 ---
 
-## 🔥 Reto (opcional)
+### 🔹 Reto 2 — Controlar errores al agregar usuarios duplicados
 
-1. **Parámetros de demo**
-   Acepta un flag `--crear-n` para crear N moderadores de prueba (usa `argparse`) y listarlos.
-2. **Inyección de repositorio**
-   Cambia `main(repo=None)` para permitir pasar un repositorio externo (facilita tests).
-3. **Errores controlados**
-   Envuelve `repo.agregar` con `try/except ValueError` y muestra un mensaje si hay duplicados.
+Modifica el código para que **no se rompa** si se intenta agregar un usuario con un email ya existente. En su lugar, debe mostrarse un mensaje claro por consola, sin interrumpir la ejecución.
+
+---
+
+### 🔹 Reto 3 — Mostrar resumen final de emails activos
+
+Al final de la ejecución, imprime una línea que resuma **los emails de los usuarios actualmente activos** en el repositorio.
+
