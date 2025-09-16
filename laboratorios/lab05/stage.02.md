@@ -85,13 +85,38 @@ python -c "import main"
   * Lista final tras eliminar al admin (solo el moderador).
 * Importar `main` **no** ejecuta la demo (no hay prints), confirmando que el bloque protegido por `__main__` funciona.
 
+
+# ✅  Retos
+
 ---
 
-## 🔥 Reto (opcional)
+### 🔹 Reto 1 — Proteger el script con `if __name__ == "__main__"`
 
-1. **Parámetros de demo**
-   Acepta un flag `--crear-n` para crear N moderadores de prueba (usa `argparse`) y listarlos.
-2. **Inyección de repositorio**
-   Cambia `main(repo=None)` para permitir pasar un repositorio externo (facilita tests).
-3. **Errores controlados**
-   Envuelve `repo.agregar` con `try/except ValueError` y muestra un mensaje si hay duplicados.
+Asegúrate de que la función principal del programa (`main()`) solo se ejecuta si el archivo `main.py` se lanza directamente. Usa la condición especial:
+
+```python
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+### 🔹 Reto 2 — Comprobar que `main.py` no se ejecuta al importar
+
+Haz una prueba: importa el módulo `main` desde otro archivo o desde consola para verificar que **no imprime nada** automáticamente. Añade un `print("Demo iniciada")` dentro de la función `main()` para comprobarlo visualmente.
+
+> Pista:
+> Ejecuta esto desde terminal:
+>
+> ```bash
+> python -c "import main"
+> ```
+
+---
+
+### 🔹 Reto 3 — Mostrar el valor de `__name__`
+
+Dentro de `main.py`, **imprime el valor de `__name__`** tanto **dentro de la función `main()`** como **fuera**, justo antes del `if __name__ == "__main__"`.
+
+Esto te ayudará a ver cómo cambia `__name__` dependiendo de si el script se ejecuta directamente o es importado como módulo.
+

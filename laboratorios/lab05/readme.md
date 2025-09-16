@@ -231,11 +231,3 @@ python cli.py listar --solo-activos
 1. ¿Qué sucede si importas `main` desde otro módulo? ¿Se ejecuta la demo?
 2. ¿Cómo añadirías un subcomando `activar EMAIL` a la CLI que active un usuario?
 3. ¿Cómo reorganizarías el código para que el repositorio sea inyectable (pasado como dependencia) en lugar de global?
-
----
-
-## 🔥 Retos (opcionales)
-
-* **Persistencia JSON**: añade `guardar(path)` / `cargar(path)` en `RepositorioUsuarios`.
-* **Subcomando `buscar`**: por rol o texto en nombre/email.
-* **Paquete instalable**: estructura `src/`, `pyproject.toml` y entrada de consola (`entry_points`) para ejecutar `usuarios` como comando del sistema.
