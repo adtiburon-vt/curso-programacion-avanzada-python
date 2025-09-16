@@ -74,10 +74,3 @@ Extender y especializar el sistema de usuarios creado en el Lab 3 mediante:
 2. ¿Qué devuelve `AdminConLogger.mro()` y por qué ese orden?
 3. ¿Cómo harías para que `Moderador` pudiera tener distintos permisos según el nivel (básico = editar, avanzado = editar+borrar)?
 
----
-
-## 🔥 Retos opcionales
-
-* Implementa un `SuperAdmin` que herede de `Admin` y añada un método `reset_password(usuario)`.
-* Haz que `LoggerMixin` escriba los eventos en un fichero además de imprimirlos.
-* Experimenta con otro mixin, por ejemplo `NotificadorMixin` con `enviar_email()`, y crea una clase que herede de varios mixins + `Usuario`.
