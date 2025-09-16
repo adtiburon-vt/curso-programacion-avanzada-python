@@ -1,4 +1,4 @@
-# ✅ Resolución paso a paso — Fase 3 Simplificada
+# ✅ Resolución paso a paso
 
 ---
 
