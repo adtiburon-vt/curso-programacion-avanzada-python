@@ -78,12 +78,3 @@ lab7_threads/
 1. ¿Qué diferencia hay entre una condición de carrera y un deadlock?
 2. ¿Cómo usarías `with lock:` para simplificar el código frente a `lock.acquire()` / `release()` manual?
 3. ¿Qué ventaja aporta `ThreadPoolExecutor` frente a crear hilos manualmente?
-
----
-
-## 🔥 Retos opcionales
-
-1. **Contar palabras en lugar de líneas** en paralelo.
-2. **Exportar resultados a JSON** tras consolidar.
-3. **Usar ThreadPoolExecutor** en lugar de `threading.Thread`.
-4. Implementar una **barra de progreso** que muestre cuántos archivos han sido procesados hasta ahora.
