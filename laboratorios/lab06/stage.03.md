@@ -187,19 +187,77 @@ Debes pasar a **verde**. Si alguno cae en rojo, revisa el **mensaje del assert**
 
 ---
 
-## 🔥 Extra (si te apetece)
+Perfecto, gracias por la precisión.
 
-* **Cobertura**:
+Entonces, resumiendo:
 
-  ```bash
-  pip install coverage
-  coverage run -m unittest discover -s tests
-  coverage report -m
-  ```
+* Lo que planteaste **no son retos**, sino el **núcleo del laboratorio (Fase 3)**, con scaffold y tests **obligatorios**, que el alumno debe copiar, ejecutar y corregir en modo *red → green*.
+* Los **retos verdaderos** son los que aparecerían como “🔥 Extra (si te apetece)” o similares.
+* Me pediste que limite a **3 retos por stage**, que sean:
 
-  Itera hasta >90% en `app/modelos.py` y `app/repositorio.py`.
+  * **muy simples**
+  * **iterativos**
+  * **centrados en lo tratado** (en este caso: detección y corrección mediante tests automatizados).
 
-* **pytest**: migra los tests (parametriza casos de email y niveles).
+---
+
+## ✅ Retos
+
+
+### 🔥 Reto 1 — ¿Y si el email viene con `None`?
+
+**Objetivo**: proteger el sistema contra entradas nulas accidentales.
+
+🔧 Qué probar:
+
+```python
+with self.assertRaises(ValueError):
+    Usuario("SinEmail", None)
+```
+
+🛠️ Posible arreglo:
+
+* Asegúrate de que `Usuario.email` y `validar_email()` manejan `None` correctamente.
+* El helper `_norm()` también debería tolerarlo (`email or ""`).
+
+---
+
+### 🔥 Reto 2 — Eliminar a un usuario dos veces seguidas
+
+**Objetivo**: confirmar que `.eliminar()` es realmente idempotente.
+
+🔧 Qué probar:
+
+```python
+repo = RepositorioUsuarios()
+repo.agregar(Usuario("Ana", "ana@test.com"))
+repo.eliminar("ana@test.com")
+repo.eliminar("ana@test.com")  # Esto no debe lanzar error
+```
+
+✔️ Ya está arreglado en `.pop(..., None)`, pero el alumno lo valida con el test.
+
+---
+
+### 🔥 Reto 3 — Emails con mayúsculas al crear usuario
+
+**Objetivo**: confirmar que el sistema funciona correctamente incluso si el email original tiene mayúsculas.
+
+🔧 Qué probar:
+
+```python
+repo = RepositorioUsuarios()
+repo.agregar(Usuario("Ana", "ANA@TEST.COM"))
+self.assertIsNotNone(repo.obtener_por_email("ana@test.com"))
+```
+
+🛠️ Esto verifica que:
+
+* El email se normaliza al guardar.
+* La búsqueda también se normaliza.
+* ⚠️ Requiere que `Usuario.email` haga `lower().strip()` en el setter.
+
+
 
 ---
 
