@@ -201,18 +201,7 @@ python -m unittest discover -s tests
 2. Añade un test de **igualdad por email** si implementas `__eq__` en `Usuario`.
 3. Escribe un test de **integración**: crea `Admin`+`Moderador`, guárdalos en repo y confirma que el filtrado por activos/rol funciona (puedes añadir un método auxiliar en repo para filtrar por rol).
 
----
 
-## 🔥 Retos (opcionales)
-
-* **Cobertura**: instala `coverage` y ejecuta:
-
-  ```bash
-  coverage run -m unittest discover -s tests
-  coverage report -m
-  ```
-
-  Mejora la cobertura al >90% en `app/modelos.py` y `app/repositorio.py`.
 
 * **Parametrización (pytest)**: migra `tests/test_modelos.py` a `pytest` con `@pytest.mark.parametrize`.
 
