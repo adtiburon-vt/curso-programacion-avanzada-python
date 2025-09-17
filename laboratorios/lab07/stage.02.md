@@ -129,11 +129,81 @@ Resultados consolidados (archivo -> líneas):
 
 ---
 
-## 🔥 Retos (opcionales)
+Perfecto. A continuación te presento los **retos corregidos y ajustados** para la **Fase 2 — Consolidación con Lock**, siguiendo **tus criterios clave**:
 
-1. **Contador global de archivos procesados**
-   Añade `contador = {"ok": 0}` y protégelo con el mismo lock para incrementar `ok` tras cada guardado.
-2. **ThreadPoolExecutor**
-   Reescribe el lanzamiento usando `concurrent.futures.ThreadPoolExecutor` y `as_completed`, guardando en `resultados` bajo lock.
-3. **Errores controlados**
-   Simula un archivo ilegible (permisos) y guarda `-1` como líneas, sin romper el resto. (Tip: `try/except` alrededor de `contar_lineas`.)
+> ✅ Simples
+> ✅ Iterativos
+> ✅ Enfocados 100% en el objetivo de la fase (uso de `Lock` para proteger estructuras compartidas)
+
+---
+
+## 🔥 Retos 
+
+### 🔸 Reto 1 — Contador global de archivos procesados
+
+**Objetivo**
+Añadir un contador compartido que indique cuántos archivos han sido procesados correctamente.
+
+---
+
+🔧 Qué hacer:
+
+* Crea una variable global o compartida como `contador = {"ok": 0}`.
+* Protégela con el **mismo `lock`** que ya usas para el diccionario `resultados`.
+* Incrementa `contador["ok"] += 1` justo después de guardar el resultado.
+
+---
+
+🧠 Qué practico:
+
+* Usar el `lock` para proteger **varios recursos compartidos**.
+* Medir el progreso de forma segura.
+
+---
+
+### 🔸 Reto 2 — Control de errores: archivo ilegible
+
+**Objetivo**
+Manejar errores al leer archivos sin detener el resto de hilos.
+
+---
+
+🔧 Qué hacer:
+
+* En `tarea_contar_guardando()`, añade un bloque `try/except` alrededor de la llamada a `contar_lineas()`.
+* Si ocurre un error, guarda `-1` como valor en el diccionario `resultados[nombre] = -1`.
+* Imprime un mensaje indicando el fallo.
+
+---
+
+🧠 Qué practico:
+
+* Cómo capturar errores **dentro de un hilo**.
+* Cómo mantener la aplicación robusta incluso si falla un archivo.
+
+---
+
+### 🔸 Reto 3 — Mostrar progreso: "X de Y archivos procesados"
+
+**Objetivo**
+Mostrar, desde cada hilo, cuántos archivos han sido procesados hasta ese momento.
+
+---
+
+🔧 Qué hacer:
+
+* Usa el mismo `contador["ok"] += 1` del reto 1.
+* Después de incrementarlo, imprime algo como:
+
+```python
+[archivo2.txt] líneas: 18 (guardado) — Progreso: 2 de 3
+```
+
+* Calcula `Y = total de archivos`, que puedes pasar como argumento a cada hilo.
+
+---
+
+🧠 Qué practico:
+
+* Mostrar una forma **segura** y concurrente de visualizar progreso.
+* Refuerza uso de locks en entornos concurrentes con feedback visual.
