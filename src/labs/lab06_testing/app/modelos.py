@@ -1,0 +1,3 @@
+from .utils import validar_email
+# … Usuario, Admin, Invitado, Moderador, mixins …
+# Asegúrate de que Usuario usa validar_email en el setter de email.
