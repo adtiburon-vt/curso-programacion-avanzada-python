@@ -77,20 +77,67 @@ if __name__ == "__main__":
 * `Moderador(...).activar()` funciona **sin** logs (no usa el mixin).
 * El MRO de `AdminConLogger` muestra al mixin **antes** de `Admin`, confirmando que `super()` en el mixin delega a `Admin.activar()`.
 
----
 
-## 🔥 Retos (opcionales)
-
-1. **Otro mixin: `NotificadorMixin`**
-   Añade `enviar_email(asunto, cuerpo)` (falso enví­o). Crea `AdminFull(NotificadorMixin, LoggerMixin, Admin)` y demuestra que ambos mixins cooperan con `super()`.
-
-2. **Mixins con estado**
-   Haz un `AuditoriaMixin` que acumule eventos en una lista interna (`self._audit = []`). Asegura inicialización cooperativa en `__init__` llamando a `super().__init__` (y ajusta constructores de la jerarquía si lo usas).
-
-3. **Orden de mixins**
-   Intercambia el orden `AdminConLogger(Admin, LoggerMixin)` y comprueba qué cambia. Explica por qué **el orden de bases** afecta qué `activar()` se ejecuta primero.
+## 🔥 Retos opcionales — Mixins y MRO
 
 ---
+
+### 🔹 Reto 1 — Añadir un mixin de notificaciones
+
+Crea un nuevo mixin `NotificadorMixin` con un método:
+
+```python
+def enviar_email(self, asunto: str, cuerpo: str) -> None:
+    print(f"[EMAIL a {self.email}] {asunto}: {cuerpo}")
+```
+
+Luego crea una clase `AdminFull(NotificadorMixin, LoggerMixin, Admin)` que combine ambos mixins.
+
+Prueba que:
+
+* `AdminFull(...).activar()` muestra los logs.
+* Puedes llamar a `.enviar_email()` sobre una instancia sin errores.
+
+---
+
+### 🔹 Reto 2 — Cambiar el orden de los mixins y observar qué cambia
+
+Invierte el orden de herencia en `AdminConLogger`:
+
+```python
+class AdminConLogger(Admin, LoggerMixin): ...
+```
+
+Observa:
+
+* ¿Se siguen mostrando los logs al llamar `activar()`?
+* ¿Qué valor tiene `AdminConLogger.mro()` con este nuevo orden?
+
+Explica brevemente por qué ocurre ese cambio.
+
+---
+
+### 🔹 Reto 3 — Auditoría interna cooperativa
+
+Crea un mixin `AuditoriaMixin` que guarde un historial de eventos:
+
+```python
+class AuditoriaMixin:
+    def __init__(self):
+        self._audit = []
+        super().__init__()
+
+    def auditar(self, evento: str):
+        self._audit.append(evento)
+```
+
+Crea una clase `AdminAuditable(AuditoriaMixin, Admin)` y:
+
+* Asegúrate de que `Admin.__init__` se llama correctamente.
+* Usa `.auditar("algo")` y comprueba que el historial se guarda en `._audit`.
+
+Este reto requiere usar `super().__init__()` en todos los constructores para que la cadena de inicialización sea completa.
+
 
 # ✅ Conclusión del Laboratorio 4
 

@@ -286,11 +286,80 @@ python deadlock_demo.py
 
 ---
 
-## 🔥 Retos (opcionales)
 
-1. **Backoff exponencial**: si falla el segundo lock, espera un tiempo creciente antes de reintentar.
-2. **RLock cooperativo**: reescribe los ejemplos usando `threading.RLock` cuando un mismo hilo necesite reentrar en la región crítica.
-3. **Métricas**: registra cuántos reintentos fueron necesarios antes de completar sin deadlock.
+## 🔁 Retos 
+
+---
+
+### 🔸 Reto 1 — Añade una alerta visual cuando un hilo evita el deadlock
+
+**Objetivo:**
+Confirmar visualmente que el uso de `acquire(timeout)` está funcionando y que **un hilo ha desistido correctamente**.
+
+---
+
+🔧 Qué hacer:
+
+* En la función `resolver_con_timeout`, tras detectar que un hilo **no pudo adquirir el segundo lock**, imprime claramente:
+
+```python
+print(f"[{who}] 💡 Deadlock evitado: liberando lock1 y abortando")
+```
+
+🧠 Qué aprendo:
+
+* Que los hilos **no se quedan bloqueados** si se usa timeout.
+* Que el **abandono controlado es una forma válida de prevención**.
+
+---
+
+### 🔸 Reto 2 — Agrega nombres distintos a los locks para ver quién espera por quién
+
+**Objetivo:**
+Visualizar mejor **quién intenta adquirir qué lock** para entender el patrón que genera el deadlock.
+
+---
+
+🔧 Qué hacer:
+
+* Pasa `nombre_lock1` y `nombre_lock2` como strings a `resolver_con_timeout`, y muéstralos:
+
+```python
+print(f"[{who}] intentando {nombre_lock2} tras tomar {nombre_lock1}")
+```
+
+🧠 Qué aprendo:
+
+* Cómo el **orden de adquisición** influye en el deadlock.
+* Cómo diagnosticar visualmente la lógica de los hilos.
+
+
+---
+
+### 🔸 Reto 3 — Detecta el deadlock solo si ambos hilos siguen vivos
+
+**Objetivo:**
+Mejorar la detección del deadlock de forma sencilla y didáctica.
+
+---
+
+🔧 Qué hacer:
+
+* En `simular_deadlock()`, después del `join(timeout)`, añade una condición más clara:
+
+```python
+if h1.is_alive() and h2.is_alive():
+    print("⚠️  DEADLOCK confirmado: ambos hilos están bloqueados")
+else:
+    print("✔ No hubo deadlock (esta vez)")
+```
+
+🧠 Qué aprendo:
+
+* Cómo usar `is_alive()` como herramienta de diagnóstico concurrente.
+* A interpretar correctamente cuándo hay bloqueo mutuo.
+
+
 
 ---
 

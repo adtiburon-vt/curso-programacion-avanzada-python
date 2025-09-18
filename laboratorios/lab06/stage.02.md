@@ -136,14 +136,60 @@ python -m unittest discover -s tests
 
 ---
 
-## 🔥 Extensiones sugeridas (opcionales)
+## 🔁 Retos
 
-1. **Casos borde de email**
-   Añade asserts para `"@x"`, `"x@"`, espacios alrededor, mayúsculas → deben normalizarse o fallar según tu `validar_email`.
+---
 
-2. **Normalización en repo**
-   Testea `obtener_por_email("  ANA@TEST.COM  ")` → debe encontrar a `ana@test.com`.
-   Si falla, lo arreglamos en **Fase 3**.
+### ✅ **Reto 1 — Escribe tus primeros tests con `assertEqual` y `assertIn`**
 
-3. **Contador de instancias**
-   Test que `Usuario.contador` aumenta (y quizá se resetea en `tearDown` si lo tocas).
+**Objetivo**: transformar comprobaciones manuales en tests automatizados básicos.
+
+🔧 Qué hacer:
+
+* En `tests/test_modelos.py`, crea un test que compruebe:
+
+  * Que `Usuario(...).presentarse()` devuelve el texto esperado.
+  * Que un `Admin` tiene el permiso `"borrar"`.
+* Usa `assertEqual()` y `assertIn()`.
+
+🧠 Qué practico:
+
+* Crear clases de test con `unittest`.
+* Aserciones directas sobre valores conocidos.
+
+---
+
+### ✅ **Reto 2 — Comprueba que se lanzan errores esperados**
+
+**Objetivo**: practicar `with self.assertRaises(...)`.
+
+🔧 Qué hacer:
+
+* En `test_modelos.py`, añade dos tests que verifiquen que se lanza `ValueError`:
+
+  * Si se crea un `Usuario` con email sin `"@"`.
+  * Si se crea un `Moderador` con `nivel=0`.
+
+🧠 Qué practico:
+
+* Validar errores controlados.
+* Escribir casos negativos correctamente.
+
+---
+
+### ✅ **Reto 3 — Comprueba las operaciones básicas del repositorio**
+
+**Objetivo**: asegurar que `agregar()` y `obtener_por_email()` funcionan.
+
+🔧 Qué hacer:
+
+* En `tests/test_repositorio.py`, crea un test que:
+
+  * Añada un `Usuario`.
+  * Lo recupere por email.
+  * Verifique que es el mismo objeto (`assertIs()`).
+
+🧠 Qué practico:
+
+* Crear instancias de repositorio para test.
+* Verificar relaciones básicas entre objetos.

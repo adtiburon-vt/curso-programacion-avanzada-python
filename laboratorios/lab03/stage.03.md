@@ -193,14 +193,74 @@ if __name__ == "__main__":
 
 ---
 
-## 🔥 Retos (opcionales)
 
-1. **Factory por rol** en `Usuario.desde_dict`: devuelve `Admin` o `Invitado` si `rol` lo indica.
-2. **Igualdad/Hash**: `__eq__` por email normalizado y `__hash__` consistente (para usar en `set`).
-3. **Permisos compuestos**: añade un tipo `Permiso` y compón permisos por rol desde un “catálogo” central.
-4. **Persistencia**: exporta/importa usuarios del repositorio a JSON (sin contraseñas en claro).
+### 🔹 Reto 1 — Confirmar que `BaseUsuario` es abstracta
+
+Intenta crear una instancia de `BaseUsuario` en `main.py` y **confirma que lanza un `TypeError`** como se espera.
+
+```python
+try:
+    u = BaseUsuario()
+except TypeError as e:
+    print("Instancia bloqueada correctamente:", e)
+```
+
+Este reto ayuda a verificar que la clase base define un **contrato abstracto** real, que no puede usarse directamente.
 
 ---
+
+### 🔹 Reto 2 — Verificar los permisos de cada subclase
+
+Crea una instancia de cada tipo (`Usuario`, `Admin`, `Invitado`) y muestra:
+
+* El resultado de `.permisos()`
+* El resultado de `.tiene_permiso("borrar")`
+
+Esto permite comparar los **comportamientos específicos de cada rol** sin tocar su código.
+
+```python
+a = Admin("Root", "root@corp.com")
+i = Invitado("Visitante", "visitante@mail.com")
+u = Usuario("Ana", "ana@mail.com")
+
+print(a.permisos(), a.tiene_permiso("borrar"))      # ['ver', 'crear', 'editar', 'borrar'], True
+print(i.permisos(), i.tiene_permiso("borrar"))      # ['ver'], False
+print(u.permisos(), u.tiene_permiso("ver"))         # ['ver'], True
+```
+
+---
+
+### 🔹 Reto 3 — Implementar `__str__` personalizado en `Admin`
+
+Redefine el método `__str__` solo en la clase `Admin` para que muestre:
+
+```txt
+[ADMIN] Nombre <email> (rol) [activo/inactivo]
+```
+
+Esto refuerza cómo las subclases pueden **personalizar comportamiento heredado** sin romper la jerarquía base.
+
+```python
+class Admin(Usuario):
+    def __init__(...):
+        ...
+
+    def __str__(self) -> str:
+        return f"[ADMIN] {super().__str__()}"
+```
+
+> Verifica en `main.py` con: `print(a)`
+
+---
+
+## 🧩 Extras para usar más adelante
+
+Una vez estos tres retos estén claros, puedes introducir como extensiones opcionales:
+
+* Subclase `Moderador` con nivel y permisos progresivos
+* Repositorio con búsqueda por predicado
+* Factory para crear instancias según `rol`
+
 
 # ✅ Conclusión del Laboratorio 3
 

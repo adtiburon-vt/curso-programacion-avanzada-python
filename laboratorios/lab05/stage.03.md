@@ -132,23 +132,50 @@ python cli.py listar
 
 ## 🔥 Retos (opcionales)
 
-1. **Subcomando `activar`/`desactivar`**
+### 🔹 Reto 1 — Activar y desactivar usuarios
 
-   * `python cli.py activar email@x.com` cambia `activo=True`.
-   * `python cli.py desactivar email@x.com` cambia `activo=False`.
+Añade dos nuevos subcomandos a la CLI:
 
-2. **Persistencia JSON**
+```bash
+python cli.py activar email@x.com
+python cli.py desactivar email@x.com
+```
 
-   * Añade a `RepositorioUsuarios` métodos `guardar(path)` y `cargar(path)`.
-   * En `cli.py`, acepta `--db ruta.json` y carga/guarda al inicio/final.
+Deben modificar el atributo `activo` del usuario si existe:
 
-3. **Buscar por criterio**
+* `activar` → establece `activo = True`
+* `desactivar` → establece `activo = False`
 
-   * `python cli.py buscar --texto luc` → imprime usuarios cuyo nombre/email contiene “luc”.
+Si el usuario no existe, muestra un mensaje de aviso.
+Este reto refuerza el uso de argumentos posicionales simples y operaciones sobre objetos en memoria.
 
-4. **Composición de comandos**
+---
 
-   * Permite `--salida csv|json` en `listar` para exportar resultados.
+### 🔹 Reto 2 — Buscar usuarios por texto
+
+Crea un nuevo subcomando:
+
+```bash
+python cli.py buscar --texto luc
+```
+
+Debe imprimir todos los usuarios cuyo nombre o email contengan el texto indicado (no sensible a mayúsculas/minúsculas).
+Usa `str.lower()` y `in` para realizar la comparación.
+Este reto practica el uso de predicados y filtros dinámicos.
+
+---
+
+### 🔹 Reto 3 — Exportar la lista de usuarios en JSON
+
+Modifica el subcomando `listar` para que acepte un argumento opcional:
+
+```bash
+python cli.py listar --salida json
+```
+
+Cuando se use `--salida json`, imprime los usuarios como una lista JSON válida en lugar del `str(u)` clásico.
+Este reto introduce la conversión de objetos a estructuras serializables (`dict`) y el uso de `json.dumps()`.
+
 
 ---
 
